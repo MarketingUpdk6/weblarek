@@ -33,6 +33,7 @@ export interface IOrderRequest {
     email: string;
     phone: string;
     items: string[];
+    total: number;
 }
 
 export interface IOrderResponse {

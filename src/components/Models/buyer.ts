@@ -1,5 +1,5 @@
 import { FormError, IBuyer } from "../../types";
-
+import { IEvents } from '../base/Events';
 export class Buyer {
   private data: IBuyer = {
     payment: '',
@@ -7,10 +7,14 @@ export class Buyer {
     phone: '',
     email: ''
   };
-
+  protected events: IEvents;
+  constructor(events: IEvents) {
+    this.events = events;
+  }
   // Сохранение данных — можно передать частичный объект
   updateData(partialData: Partial<IBuyer>): void {
     this.data = { ...this.data, ...partialData };
+    this.events.emit('buyer:changed', partialData);
   }
 
   // Получение всех данных
@@ -26,6 +30,7 @@ export class Buyer {
       phone: '',
       email: ''
     };
+    this.events.emit('buyer:changed', this.data);
   }
 
   // Валидация: проверяет каждое поле на "не пустое"
