@@ -6,7 +6,7 @@ import { CardImage } from "./CardImage";
 export class CardPreview extends CardImage {
   protected _text: HTMLElement;
   protected _button: HTMLButtonElement;
-  private _buttonClickHandler?: () => void;
+  private _product: IProduct | null = null;
 
   constructor(container: HTMLElement, events: IEvents) {
     super(container, events);
@@ -14,23 +14,13 @@ export class CardPreview extends CardImage {
     this._button = ensureElement<HTMLButtonElement>(".card__button", container);
 
     this._button.addEventListener("click", () => {
-      if (this._buttonClickHandler) {
-        this._buttonClickHandler();
-      }
+      this.events.emit("card:toggle", { product: this._product });
     });
   }
 
   render(data?: Partial<IProduct & { inBasket: boolean }>): HTMLElement {
     if (!data) return this.container;
-    const product = data as IProduct;
-    const inBasket = data.inBasket || false;
-    this._buttonClickHandler = () => {
-      if (inBasket) {
-        this.events.emit("card:remove", { product });
-      } else {
-        this.events.emit("card:add", { product });
-      }
-    };
+    this._product = data as IProduct;
 
     if (data.category) this.setCategory(data.category);
     if (data.title) this.setTitle(data.title);
@@ -39,8 +29,7 @@ export class CardPreview extends CardImage {
     if (data.description) {
       this._text.textContent = data.description;
     }
-
-    // Управление кнопкой
+    const inBasket = data.inBasket || false;
     if (data.price === null) {
       this._button.disabled = true;
       this._button.textContent = "Недоступно";

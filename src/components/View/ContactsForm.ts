@@ -19,14 +19,6 @@ export class ContactsForm extends Form<IBuyer> {
       container,
     );
 
-    this._emailInput.type = "email";
-    this._emailInput.pattern = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$";
-    this._emailInput.required = true;
-
-    this._phoneInput.type = "tel";
-    this._phoneInput.pattern = "[0-9+\\-()\\s]{10,20}";
-    this._phoneInput.required = true;
-
     // Обработчик изменения email
     this._emailInput.addEventListener("input", () => {
       // Эмитим событие только если поле валидно
